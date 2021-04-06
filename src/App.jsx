@@ -1,13 +1,16 @@
 import React from 'react'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-import Home from './pages/Home'
+import Pages from './pages'
 
 function App() {
   return (
-    <CssBaseline>
-      <Home />
-    </CssBaseline>
+    <Router>
+      <CssBaseline>
+        <Pages />
+      </CssBaseline>
+    </Router>
   )
 }
 
