@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
-import api from './services/Api'
+import Home from './pages/Home'
 
 function App() {
-  const [data, setData] = useState()
-
-  useEffect(() => {
-    api.get('all').then(setData)
-  }, [])
-
-  console.log(data)
-
-  return <div>Teste</div>
+  return (
+    <CssBaseline>
+      <Home />
+    </CssBaseline>
+  )
 }
 
 export default App
