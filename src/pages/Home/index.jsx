@@ -2,6 +2,8 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import {
   Container,
   Divider,
@@ -12,10 +14,11 @@ import {
   CardMedia,
   CardContent,
   Typography,
+  Box,
+  CircularProgress,
 } from '@material-ui/core/'
 import { makeStyles } from '@material-ui/core/styles'
-import Pagination from '@material-ui/lab/Pagination'
-import { Link } from 'react-router-dom'
+// import Pagination from '@material-ui/lab/Pagination'
 
 import api from '../../services/Api'
 
@@ -34,15 +37,19 @@ const useStyles = makeStyles(theme => ({
   link: {
     textDecoration: 'none',
   },
-  CardMedia: {
-    height: 200,
+  cardMedia: {
+    minHeight: 250,
   },
-  pagination: {
-    margin: theme.spacing(5),
-    '& ul': {
-      justifyContent: 'center',
-    },
+  progress: {
+    height: '100vh',
+    width: '100%',
   },
+  // pagination: {
+  //   margin: theme.spacing(5),
+  //   '& ul': {
+  //     justifyContent: 'center',
+  //   },
+  // },
 }))
 
 function Home() {
@@ -52,16 +59,6 @@ function Home() {
   useEffect(() => {
     api.get('all').then(setData)
   }, [])
-  console.log(data)
-  function createList() {
-    const list = []
-    for (let i = 0; i < 20; i++) {
-      list.push(i)
-    }
-    return list
-  }
-
-  const lista = createList()
 
   return (
     <Container fixed>
@@ -71,31 +68,42 @@ function Home() {
       <Divider />
 
       <Grid container className={classes.grid} spacing={4}>
-        {lista.map(item => (
-          <Grid key={item} item xs={12} sm={6} md={4} lg={3}>
-            <Link to={'/name/united'} className={classes.link}>
-              <Card>
-                <CardActionArea>
-                  <CardMedia
-                    className={classes.CardMedia}
-                    image="/static/images/cards/contemplative-reptile.jpg"
-                    title="Contemplative Reptile"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      País
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Capital
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Link>
-          </Grid>
-        ))}
+        {data?.length > 0 ? (
+          data.map(item => (
+            <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
+              <Link to={`/name/${item.name}`} className={classes.link}>
+                <Card>
+                  <CardActionArea>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image={item.flag}
+                      title="Contemplative Reptile"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {item.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        {item.capital}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Link>
+            </Grid>
+          ))
+        ) : (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            className={classes.progress}
+          >
+            <CircularProgress color="secondary" />
+          </Box>
+        )}
       </Grid>
-      <Pagination color="secondary" className={classes.pagination} count={10} size="large" />
+      {/* <Pagination color="secondary" className={classes.pagination} count={10} size="large" /> */}
     </Container>
   )
 }
