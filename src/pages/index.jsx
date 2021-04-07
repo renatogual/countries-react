@@ -8,7 +8,7 @@ function Pages() {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route path="/name/united" component={CountryInfo} />
+      <Route path="/name/:name" component={CountryInfo} />
     </Switch>
   )
 }
