@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import {
   Container,
   Grid,
@@ -13,23 +13,68 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
+import api from '../../services/Api'
+
 const useStyles = makeStyles({
   container: {
     height: '100vh',
   },
   cardMedia: {
     height: 400,
-    width: 300,
   },
   button: {
     marginRight: 10,
   },
 })
 
+const initialState = {
+  name: '',
+  capital: '',
+  area: '',
+  population: '',
+  topLevelDomain: '',
+  flag: '',
+}
+
 function CountryInfo() {
   const classes = useStyles()
+  const history = useHistory()
 
-  const aux = true
+  const { name } = useParams()
+
+  const [togleDisabled, setTogleDisabled] = useState(true)
+  const [country, setCountry] = useState(initialState)
+
+  useEffect(() => {
+    api.get(`name/${name}?fullText=true`).then(({ data }) => {
+      setCountry({
+        ...initialState,
+        name: data[0].name,
+        capital: data[0].capital,
+        area: data[0].area,
+        population: data[0].population,
+        topLevelDomain: data[0].topLevelDomain,
+        flag: data[0].flag,
+      })
+    })
+  }, [name])
+
+  function goBack() {
+    history.push('/')
+  }
+
+  function handleSubmit() {
+    console.log('teste')
+  }
+
+  function handleEdit() {
+    const togle = !togleDisabled
+    setTogleDisabled(togle)
+
+    if (togle) {
+      handleSubmit()
+    }
+  }
 
   return (
     <Container fixed>
@@ -45,7 +90,7 @@ function CountryInfo() {
             <CardActionArea>
               <CardMedia
                 className={classes.cardMedia}
-                // image={}
+                image={country.flag}
                 title="Contemplative Reptile"
               />
             </CardActionArea>
@@ -57,53 +102,59 @@ function CountryInfo() {
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={aux}
+              disabled={togleDisabled}
               label="País"
-              defaultValue="foo"
+              value={country.name}
               variant="outlined"
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={aux}
+              disabled={togleDisabled}
               label="Capital"
-              defaultValue="foo"
+              value={country.capital}
               variant="outlined"
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={aux}
+              disabled={togleDisabled}
               label="Área"
-              defaultValue="foo"
+              value={country.area}
               variant="outlined"
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={aux}
+              disabled={togleDisabled}
               label="População"
-              defaultValue="foo"
+              value={country.population}
               variant="outlined"
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={aux}
+              disabled={togleDisabled}
               label="Top-level domain"
-              defaultValue="foo"
+              value={country.topLevelDomain}
               variant="outlined"
             />
             <Box display="flex" alignItems="center">
-              <Button variant="contained" color="secondary" fullWidth className={classes.button}>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                className={classes.button}
+                onClick={goBack}
+              >
                 Voltar
               </Button>
-              <Button variant="contained" color="secondary" fullWidth>
-                Editar
+              <Button variant="contained" color="secondary" fullWidth onClick={handleEdit}>
+                {togleDisabled ? 'Editar' : 'Salvar'}
               </Button>
             </Box>
           </form>
