@@ -19,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles'
 // import Pagination from '@material-ui/lab/Pagination'
 
 import { getAllCountries } from '../../store/fetchActions'
+import { searchCountry } from '../../store/countries'
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -52,23 +53,41 @@ const useStyles = makeStyles(theme => ({
 
 function Home() {
   const classes = useStyles()
-  const { countries } = useSelector(state => state)
+  const {
+    countries: { list, search, filteredList },
+  } = useSelector(state => state)
   const dispatch = useDispatch()
 
+  const listCountries = search.length > 0 ? filteredList : list
+
+  // console.log(listCountries)
+
   useEffect(() => {
-    dispatch(getAllCountries())
-  }, [dispatch])
+    if (!list.length) {
+      dispatch(getAllCountries())
+    }
+  }, [dispatch, list])
+
+  function handleSearch(e) {
+    const searchName = e.target.value
+    dispatch(searchCountry(searchName))
+  }
 
   return (
     <Container fixed>
       <form className={classes.input} noValidate autoComplete="off">
-        <TextField label="Buscar país" variant="outlined" color="secondary" />
+        <TextField
+          label="Buscar país"
+          variant="outlined"
+          color="secondary"
+          onChange={handleSearch}
+        />
       </form>
       <Divider />
 
       <Grid container className={classes.grid} spacing={4}>
-        {countries.length > 0 ? (
-          countries?.map(item => (
+        {listCountries ? (
+          listCountries?.map(item => (
             <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
               <Link to={`/name/${item.name}`} className={classes.link}>
                 <Card>

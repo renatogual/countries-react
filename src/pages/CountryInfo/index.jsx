@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,7 +16,8 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { getCountry } from '../../store/fetchActions'
+// import { getCountry } from '../../store/fetchActions'
+import { addCountryInfo, editCountry } from '../../store/countries'
 
 const useStyles = makeStyles({
   container: {
@@ -32,30 +35,45 @@ function CountryInfo() {
   const classes = useStyles()
   const history = useHistory()
   const { idName } = useParams()
-
-  const [togleDisabled, setTogleDisabled] = useState(true)
-  const [{ flag, name, capital, area, population, topLevelDomain }] = useSelector(
-    state => state.country
-  )
   const dispatch = useDispatch()
 
+  const {
+    countries: { details },
+  } = useSelector(state => state)
+
+  console.log(details)
+
+  const [buttonEdit, setButtonEdit] = useState(true)
+  const [nameInput, setNameInput] = useState(details?.name)
+  const [capitalInput, setCapitalInput] = useState(details?.capital)
+  const [areaInput, setareaInput] = useState(details?.area)
+  const [populationInput, setPopulationInput] = useState(details?.population)
+  const [topLevelDomainInput, setTopLevelDomainInput] = useState(details?.topLevelDomain)
+
   useEffect(() => {
-    dispatch(getCountry(idName))
-  }, [idName, dispatch])
+    dispatch(addCountryInfo(idName))
+  }, [])
 
   function goBack() {
     history.push('/')
   }
 
   function handleSubmit() {
-    console.log('teste')
+    const newCountry = {
+      name: nameInput,
+      capital: capitalInput,
+      area: areaInput,
+      population: populationInput,
+      topLevelDomain: topLevelDomainInput,
+    }
+    dispatch(editCountry(newCountry))
   }
 
-  function handleEdit() {
-    const togle = !togleDisabled
-    setTogleDisabled(togle)
+  function handleButton() {
+    const buttonSave = !buttonEdit
+    setButtonEdit(buttonSave)
 
-    if (togle) {
+    if (buttonSave) {
       handleSubmit()
     }
   }
@@ -72,7 +90,11 @@ function CountryInfo() {
         <Grid item xs={12} sm={6} lg={6}>
           <Card>
             <CardActionArea>
-              <CardMedia className={classes.cardMedia} image={flag} title="Contemplative Reptile" />
+              <CardMedia
+                className={classes.cardMedia}
+                image={details?.flag}
+                title="Contemplative Reptile"
+              />
             </CardActionArea>
           </Card>
         </Grid>
@@ -82,46 +104,51 @@ function CountryInfo() {
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={togleDisabled}
+              disabled={buttonEdit}
               label="País"
-              value={name}
+              value={nameInput}
               variant="outlined"
+              onChange={e => setNameInput(e.target.value)}
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={togleDisabled}
+              disabled={buttonEdit}
               label="Capital"
-              value={capital}
+              value={capitalInput}
               variant="outlined"
+              onChange={e => setCapitalInput(e.target.value)}
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={togleDisabled}
+              disabled={buttonEdit}
               label="Área"
-              value={area}
+              value={areaInput}
               variant="outlined"
+              onChange={e => setareaInput(e.target.value)}
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={togleDisabled}
+              disabled={buttonEdit}
               label="População"
-              value={population}
+              value={populationInput}
               variant="outlined"
+              onChange={e => setPopulationInput(e.target.value)}
             />
             <TextField
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={togleDisabled}
-              label="Top-level domain"
-              value={topLevelDomain}
+              disabled={buttonEdit}
+              label="Domínio"
+              value={topLevelDomainInput}
               variant="outlined"
+              onChange={e => setTopLevelDomainInput(e.target.value)}
             />
             <Box display="flex" alignItems="center">
               <Button
@@ -133,8 +160,8 @@ function CountryInfo() {
               >
                 Voltar
               </Button>
-              <Button variant="contained" color="secondary" fullWidth onClick={handleEdit}>
-                {togleDisabled ? 'Editar' : 'Salvar'}
+              <Button variant="contained" color="secondary" fullWidth onClick={handleButton}>
+                {buttonEdit ? 'Editar' : 'Salvar'}
               </Button>
             </Box>
           </form>
