@@ -1,7 +1,5 @@
 import Axios from 'axios'
 
-const api = Axios.create({
+export default Axios.create({
   baseURL: 'https://restcountries.eu/rest/v2/',
 })
-
-export default api
