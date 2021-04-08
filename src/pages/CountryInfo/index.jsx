@@ -1,6 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
 import {
   Container,
   Grid,
@@ -13,7 +14,7 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import api from '../../services/Api'
+import { getCountry } from '../../store/fetchActions'
 
 const useStyles = makeStyles({
   container: {
@@ -27,37 +28,20 @@ const useStyles = makeStyles({
   },
 })
 
-const initialState = {
-  name: '',
-  capital: '',
-  area: '',
-  population: '',
-  topLevelDomain: '',
-  flag: '',
-}
-
 function CountryInfo() {
   const classes = useStyles()
   const history = useHistory()
-
-  const { name } = useParams()
+  const { idName } = useParams()
 
   const [togleDisabled, setTogleDisabled] = useState(true)
-  const [country, setCountry] = useState(initialState)
+  const [{ flag, name, capital, area, population, topLevelDomain }] = useSelector(
+    state => state.country
+  )
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    api.get(`name/${name}?fullText=true`).then(({ data }) => {
-      setCountry({
-        ...initialState,
-        name: data[0].name,
-        capital: data[0].capital,
-        area: data[0].area,
-        population: data[0].population,
-        topLevelDomain: data[0].topLevelDomain,
-        flag: data[0].flag,
-      })
-    })
-  }, [name])
+    dispatch(getCountry(idName))
+  }, [idName, dispatch])
 
   function goBack() {
     history.push('/')
@@ -88,11 +72,7 @@ function CountryInfo() {
         <Grid item xs={12} sm={6} lg={6}>
           <Card>
             <CardActionArea>
-              <CardMedia
-                className={classes.cardMedia}
-                image={country.flag}
-                title="Contemplative Reptile"
-              />
+              <CardMedia className={classes.cardMedia} image={flag} title="Contemplative Reptile" />
             </CardActionArea>
           </Card>
         </Grid>
@@ -104,7 +84,7 @@ function CountryInfo() {
               fullWidth
               disabled={togleDisabled}
               label="País"
-              value={country.name}
+              value={name}
               variant="outlined"
             />
             <TextField
@@ -113,7 +93,7 @@ function CountryInfo() {
               fullWidth
               disabled={togleDisabled}
               label="Capital"
-              value={country.capital}
+              value={capital}
               variant="outlined"
             />
             <TextField
@@ -122,7 +102,7 @@ function CountryInfo() {
               fullWidth
               disabled={togleDisabled}
               label="Área"
-              value={country.area}
+              value={area}
               variant="outlined"
             />
             <TextField
@@ -131,7 +111,7 @@ function CountryInfo() {
               fullWidth
               disabled={togleDisabled}
               label="População"
-              value={country.population}
+              value={population}
               variant="outlined"
             />
             <TextField
@@ -140,7 +120,7 @@ function CountryInfo() {
               fullWidth
               disabled={togleDisabled}
               label="Top-level domain"
-              value={country.topLevelDomain}
+              value={topLevelDomain}
               variant="outlined"
             />
             <Box display="flex" alignItems="center">
