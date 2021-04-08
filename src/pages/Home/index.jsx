@@ -1,7 +1,4 @@
-/* eslint-disable react/jsx-curly-brace-presence */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
