@@ -3,6 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import {
   Container,
@@ -20,7 +21,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 // import Pagination from '@material-ui/lab/Pagination'
 
-import api from '../../services/Api'
+import { getAllCountries } from '../../store/fetchActions'
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -54,11 +55,12 @@ const useStyles = makeStyles(theme => ({
 
 function Home() {
   const classes = useStyles()
-  const [data, setData] = useState()
+  const { countries } = useSelector(state => state)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    api.get('all').then(setData)
-  }, [])
+    dispatch(getAllCountries())
+  }, [dispatch])
 
   return (
     <Container fixed>
@@ -68,8 +70,8 @@ function Home() {
       <Divider />
 
       <Grid container className={classes.grid} spacing={4}>
-        {data?.length > 0 ? (
-          data.map(item => (
+        {countries.length > 0 ? (
+          countries?.map(item => (
             <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
               <Link to={`/name/${item.name}`} className={classes.link}>
                 <Card>
