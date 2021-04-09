@@ -4,19 +4,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  Container,
-  Grid,
-  Card,
-  CardActionArea,
-  CardMedia,
-  TextField,
-  Button,
-  Box,
-} from '@material-ui/core'
+import { Container, Grid, TextField, Button, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-// import { getCountry } from '../../store/fetchActions'
 import { addCountryInfo, editCountry } from '../../store/countries'
 
 const useStyles = makeStyles({
@@ -24,7 +14,8 @@ const useStyles = makeStyles({
     height: '100vh',
   },
   cardMedia: {
-    height: 400,
+    height: '100%',
+    width: '100%',
   },
   button: {
     marginRight: 10,
@@ -50,9 +41,11 @@ function CountryInfo() {
   const [populationInput, setPopulationInput] = useState(details?.population)
   const [topLevelDomainInput, setTopLevelDomainInput] = useState(details?.topLevelDomain)
 
+  console.log(nameInput)
+
   useEffect(() => {
     dispatch(addCountryInfo(idName))
-  }, [])
+  }, [dispatch, idName])
 
   function goBack() {
     history.push('/')
@@ -87,18 +80,10 @@ function CountryInfo() {
         alignItems="center"
         className={classes.container}
       >
-        <Grid item xs={12} sm={6} lg={6}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                className={classes.cardMedia}
-                image={details?.flag}
-                title="Contemplative Reptile"
-              />
-            </CardActionArea>
-          </Card>
+        <Grid item xs={12} sm={6}>
+          <img src={details.flag} className={classes.cardMedia} alt={details.name} />
         </Grid>
-        <Grid item xs={12} sm={6} lg={6}>
+        <Grid item xs={12} sm={6}>
           <form noValidate autoComplete="off">
             <TextField
               margin="normal"

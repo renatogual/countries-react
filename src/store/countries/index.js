@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 }
 
 export const addCountries = createAction('ADD_COUNTRIES')
-export const addCountryInfo = createAction('ADD_COUNTRY')
+export const addCountryInfo = createAction('ADD_COUNTRY_INFO')
 export const searchCountry = createAction('SEARCH_COUNTRY')
 export const editCountry = createAction('EDIT_COUNTRY')
 
