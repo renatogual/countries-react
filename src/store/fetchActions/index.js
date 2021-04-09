@@ -11,14 +11,3 @@ export const getAllCountries = () => {
       .catch(console.log)
   }
 }
-
-// export const getCountry = name => {
-//   return dispatch => {
-//     api
-//       .get(`/name/${name}?fullText=true`)
-//       .then(res => {
-//         dispatch(addCountryInfo(res.data))
-//       })
-//       .catch(console.log)
-//   }
-// }
