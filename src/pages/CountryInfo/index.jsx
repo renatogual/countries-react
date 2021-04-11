@@ -99,7 +99,7 @@ function CountryInfo() {
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={buttonEdit}
+              disabled
               label="País"
               value={nameInput}
               variant="outlined"
