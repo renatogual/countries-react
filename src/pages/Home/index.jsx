@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles'
 // import Pagination from '@material-ui/lab/Pagination'
 
 import { getAllCountries } from '../../store/fetchActions'
-import { searchCountry } from '../../store/countries'
+import { searchCountry, addCountryInfo } from '../../store/countries'
 
 const useStyles = makeStyles(theme => ({
   input: {
@@ -58,9 +58,10 @@ function Home() {
   } = useSelector(state => state)
   const dispatch = useDispatch()
 
-  const listCountries = search.length > 0 ? filteredList : list
+  document.title = 'Lista de países'
+  document.getElementById('favicon').href = 'favicon.ico'
 
-  // console.log(listCountries)
+  const listCountries = search.length > 0 ? filteredList : list
 
   useEffect(() => {
     if (!list.length) {
@@ -91,7 +92,7 @@ function Home() {
             <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
               <Link to={`/name/${item.name}`} className={classes.link}>
                 <Card>
-                  <CardActionArea>
+                  <CardActionArea onClick={() => dispatch(addCountryInfo(item.name))}>
                     <CardMedia
                       className={classes.cardMedia}
                       image={item.flag}
