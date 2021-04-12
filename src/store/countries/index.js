@@ -16,10 +16,10 @@ export const editCountry = createAction('EDIT_COUNTRY')
 export default createReducer(INITIAL_STATE, {
   [addCountries.type]: (state, action) => ({ ...state, list: action.payload }),
   [addCountryInfo.type]: (state, action) => {
-    const details = state.list.filter(item => item.name === action.payload)
+    const details = state.list.find(item => item.name === action.payload)
     return {
       ...state,
-      details: details[0],
+      details,
     }
   },
   [searchCountry.type]: (state, action) => {

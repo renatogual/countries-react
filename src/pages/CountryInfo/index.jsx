@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,7 +30,8 @@ function CountryInfo() {
     countries: { details },
   } = useSelector(state => state)
 
-  console.log(details)
+  document.title = idName
+  document.getElementById('favicon').href = details.flag
 
   const [buttonEdit, setButtonEdit] = useState(true)
   const [nameInput, setNameInput] = useState(details?.name)
@@ -40,12 +39,6 @@ function CountryInfo() {
   const [areaInput, setareaInput] = useState(details?.area)
   const [populationInput, setPopulationInput] = useState(details?.population)
   const [topLevelDomainInput, setTopLevelDomainInput] = useState(details?.topLevelDomain)
-
-  console.log(nameInput)
-
-  useEffect(() => {
-    dispatch(addCountryInfo(idName))
-  }, [dispatch, idName])
 
   function goBack() {
     history.push('/')
@@ -89,7 +82,7 @@ function CountryInfo() {
               margin="normal"
               color="secondary"
               fullWidth
-              disabled={buttonEdit}
+              disabled
               label="País"
               value={nameInput}
               variant="outlined"
