@@ -1,47 +1,21 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  Container,
-  Divider,
-  Grid,
-  TextField,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Typography,
-  Box,
-  CircularProgress,
-} from '@material-ui/core/'
+import { Container, Grid } from '@material-ui/core/'
 import { makeStyles } from '@material-ui/core/styles'
 // import Pagination from '@material-ui/lab/Pagination'
 
+import Input from '../../components/Input'
+import Card from '../../components/Card'
+import Loader from '../../components/Loader'
+
 import { getAllCountries } from '../../store/fetchActions'
-import { searchCountry, addCountryInfo } from '../../store/countries'
+import { searchCountry } from '../../store/countries'
 
 const useStyles = makeStyles(theme => ({
-  input: {
-    textAlign: 'center',
-    '& > *': {
-      margin: theme.spacing(5),
-      width: '50%',
-    },
-  },
   grid: {
     marginTop: theme.spacing(2),
     flexGrow: 1,
-  },
-  link: {
-    textDecoration: 'none',
-  },
-  cardMedia: {
-    minHeight: 250,
-  },
-  progress: {
-    height: '100vh',
-    width: '100%',
   },
   // pagination: {
   //   margin: theme.spacing(5),
@@ -52,22 +26,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Home() {
-  const classes = useStyles()
-  const {
-    countries: { list, search, filteredList },
-  } = useSelector(state => state)
+  const { grid } = useStyles()
+
+  const { countries, search, filteredCountries } = useSelector(
+    state => state.countries
+  )
   const dispatch = useDispatch()
 
   document.title = 'Lista de países'
   document.getElementById('favicon').href = 'favicon.ico'
 
-  const listCountries = search.length > 0 ? filteredList : list
+  const listCountries = search.length > 0 ? filteredCountries : countries
 
   useEffect(() => {
-    if (!list.length) {
+    if (!countries.length) {
       dispatch(getAllCountries())
     }
-  }, [dispatch, list])
+  }, [dispatch, countries])
 
   function handleSearch(e) {
     const searchName = e.target.value
@@ -76,50 +51,19 @@ function Home() {
 
   return (
     <Container fixed>
-      <form className={classes.input} noValidate autoComplete="off">
-        <TextField
-          label="Buscar país"
-          variant="outlined"
-          color="secondary"
-          onChange={handleSearch}
-        />
+      <form noValidate autoComplete="off">
+        <Input label="Buscar País" onChange={handleSearch} />
       </form>
-      <Divider />
 
-      <Grid container className={classes.grid} spacing={4}>
-        {listCountries ? (
+      <Grid container className={grid} spacing={4}>
+        {countries?.length > 0 ? (
           listCountries?.map(item => (
             <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
-              <Link to={`/name/${item.name}`} className={classes.link}>
-                <Card>
-                  <CardActionArea onClick={() => dispatch(addCountryInfo(item.name))}>
-                    <CardMedia
-                      className={classes.cardMedia}
-                      image={item.flag}
-                      title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {item.name}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary" component="p">
-                        {item.capital}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Link>
+              <Card flag={item.flag} name={item.name} capital={item.capital} />
             </Grid>
           ))
         ) : (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            className={classes.progress}
-          >
-            <CircularProgress color="secondary" />
-          </Box>
+          <Loader />
         )}
       </Grid>
       {/* <Pagination color="secondary" className={classes.pagination} count={10} size="large" /> */}

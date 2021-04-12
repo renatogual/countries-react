@@ -1,67 +1,52 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Container, Grid, TextField, Button, Box } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { addCountryInfo, editCountry } from '../../store/countries'
+import { editCountry } from '../../store/countries'
+
+import Input from '../../components/Input'
+import ButtonsContainer from '../../components/ButtonsContainer'
 
 const useStyles = makeStyles({
   container: {
     height: '100vh',
   },
-  cardMedia: {
+  imgSize: {
     height: '100%',
     width: '100%',
-  },
-  button: {
-    marginRight: 10,
   },
 })
 
 function CountryInfo() {
-  const classes = useStyles()
-  const history = useHistory()
+  const { container, imgSize } = useStyles()
   const { idName } = useParams()
   const dispatch = useDispatch()
 
-  const {
-    countries: { details },
-  } = useSelector(state => state)
+  const { country } = useSelector(state => state.countries)
+
+  const [name, setName] = useState(country?.name)
+  const [capital, setCapital] = useState(country?.capital)
+  const [area, setArea] = useState(country?.area)
+  const [population, setPopulation] = useState(country?.population)
+  const [domain, setDomain] = useState(country?.topLevelDomain)
+
+  const [isEditing, setIsEditing] = useState(false)
 
   document.title = idName
-  document.getElementById('favicon').href = details.flag
-
-  const [buttonEdit, setButtonEdit] = useState(true)
-  const [nameInput, setNameInput] = useState(details?.name)
-  const [capitalInput, setCapitalInput] = useState(details?.capital)
-  const [areaInput, setareaInput] = useState(details?.area)
-  const [populationInput, setPopulationInput] = useState(details?.population)
-  const [topLevelDomainInput, setTopLevelDomainInput] = useState(details?.topLevelDomain)
-
-  function goBack() {
-    history.push('/')
-  }
+  document.getElementById('favicon').href = country?.flag
 
   function handleSubmit() {
     const newCountry = {
-      name: nameInput,
-      capital: capitalInput,
-      area: areaInput,
-      population: populationInput,
-      topLevelDomain: topLevelDomainInput,
+      name,
+      capital,
+      area,
+      population,
+      domain,
     }
     dispatch(editCountry(newCountry))
-  }
-
-  function handleButton() {
-    const buttonSave = !buttonEdit
-    setButtonEdit(buttonSave)
-
-    if (buttonSave) {
-      handleSubmit()
-    }
   }
 
   return (
@@ -71,77 +56,49 @@ function CountryInfo() {
         spacing={2}
         justify="center"
         alignItems="center"
-        className={classes.container}
+        className={container}
       >
         <Grid item xs={12} sm={6}>
-          <img src={details.flag} className={classes.cardMedia} alt={details.name} />
+          <img src={country?.flag} className={imgSize} alt={country?.name} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <form noValidate autoComplete="off">
-            <TextField
-              margin="normal"
-              color="secondary"
-              fullWidth
-              disabled
+            <Input
               label="País"
-              value={nameInput}
-              variant="outlined"
-              onChange={e => setNameInput(e.target.value)}
+              value={name}
+              onChange={e => setName(e.target.value)}
+              disabled={!isEditing}
             />
-            <TextField
-              margin="normal"
-              color="secondary"
-              fullWidth
-              disabled={buttonEdit}
+            <Input
               label="Capital"
-              value={capitalInput}
-              variant="outlined"
-              onChange={e => setCapitalInput(e.target.value)}
+              value={capital}
+              onChange={e => setCapital(e.target.value)}
+              disabled={!isEditing}
             />
-            <TextField
-              margin="normal"
-              color="secondary"
-              fullWidth
-              disabled={buttonEdit}
+            <Input
               label="Área"
-              value={areaInput}
-              variant="outlined"
-              onChange={e => setareaInput(e.target.value)}
+              value={area}
+              onChange={e => setArea(e.target.value)}
+              disabled={!isEditing}
             />
-            <TextField
-              margin="normal"
-              color="secondary"
-              fullWidth
-              disabled={buttonEdit}
+            <Input
               label="População"
-              value={populationInput}
-              variant="outlined"
-              onChange={e => setPopulationInput(e.target.value)}
+              value={population}
+              onChange={e => setPopulation(e.target.value)}
+              disabled={!isEditing}
             />
-            <TextField
-              margin="normal"
-              color="secondary"
-              fullWidth
-              disabled={buttonEdit}
+            <Input
               label="Domínio"
-              value={topLevelDomainInput}
-              variant="outlined"
-              onChange={e => setTopLevelDomainInput(e.target.value)}
+              value={domain}
+              onChange={e => setDomain(e.target.value)}
+              disabled={!isEditing}
             />
-            <Box display="flex" alignItems="center">
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                className={classes.button}
-                onClick={goBack}
-              >
-                Voltar
-              </Button>
-              <Button variant="contained" color="secondary" fullWidth onClick={handleButton}>
-                {buttonEdit ? 'Editar' : 'Salvar'}
-              </Button>
-            </Box>
+
+            <ButtonsContainer
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+              submit={handleSubmit}
+            />
           </form>
         </Grid>
       </Grid>
