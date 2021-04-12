@@ -22,10 +22,10 @@ module.exports = {
     'import/no-extraneous-dependencies': [1, { devDependencies: true }],
     'import/prefer-default-export': 'off',
     'no-unused-vars': 'off',
+    'react/prop-types': 'off',
     // 'no-underscore-dangle': 'off',
     // 'react/style-prop-object': 'off',
     // 'react/self-closing-comp': 'off',
     // 'arrow-body-style': 'off',
-    // 'react/prop-types': 'off',
   },
 }
