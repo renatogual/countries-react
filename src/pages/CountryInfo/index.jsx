@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Snackbar } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { editCountry } from '../../store/countries'
@@ -27,26 +28,35 @@ function CountryInfo() {
 
   const { country } = useSelector(state => state.countries)
 
-  const [name, setName] = useState(country?.name)
   const [capital, setCapital] = useState(country?.capital)
   const [area, setArea] = useState(country?.area)
   const [population, setPopulation] = useState(country?.population)
   const [domain, setDomain] = useState(country?.topLevelDomain)
 
   const [isEditing, setIsEditing] = useState(false)
+  const [openAlert, setOpenAlert] = useState(false)
 
   document.title = idName
   document.getElementById('favicon').href = country?.flag
 
   function handleSubmit() {
     const newCountry = {
-      name,
+      name: country?.name,
       capital,
       area,
       population,
       domain,
     }
     dispatch(editCountry(newCountry))
+    setOpenAlert(true)
+  }
+
+  function handleCloseAlert(event, reason) {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenAlert(false)
   }
 
   return (
@@ -63,12 +73,7 @@ function CountryInfo() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <form noValidate autoComplete="off">
-            <Input
-              label="País"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              disabled={!isEditing}
-            />
+            <Input label="País" value={country?.name} disabled />
             <Input
               label="Capital"
               value={capital}
@@ -101,6 +106,16 @@ function CountryInfo() {
             />
           </form>
         </Grid>
+
+        <Snackbar
+          open={openAlert}
+          autoHideDuration={3000}
+          onClose={handleCloseAlert}
+        >
+          <Alert onClose={handleCloseAlert} severity="success" variant="filled">
+            Salvo com sucesso!
+          </Alert>
+        </Snackbar>
       </Grid>
     </Container>
   )
