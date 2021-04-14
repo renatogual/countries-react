@@ -1,4 +1,4 @@
-<h1 align="center"> 🚀 <a href=https://countries-react-eta.vercel.app> Demonstração </a></h1>
+<h1 align="center"> 🚀 <a target="_blank" href=https://countries-react-eta.vercel.app> Demonstração </a></h1>
 <img src="public/countries-react.gif">
 
 ## 🔖 Sobre
