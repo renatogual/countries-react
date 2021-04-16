@@ -53,3 +53,4 @@ Além disto é bom ter um editor para trabalhar com o código como o [VSCode](ht
 - [X] Editar dados de um país
 - [ ] Salvar a edição dos dados no client-side
 - [ ] Paginação para listar todos os países
+- [ ] Implementar testes unitários
